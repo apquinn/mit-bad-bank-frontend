@@ -10,7 +10,7 @@ export default function NavbarItem({ message, link, title }) {
         overlay={(props) => <Tooltip {...props}>{message}</Tooltip>}
         placement="bottom"
       >
-        <li className="nav-item">
+        <li id={"li-" + link} className="nav-item">
           <a id={link} className="nav-link" href={"#/" + link + "/"}>
             {title}
           </a>

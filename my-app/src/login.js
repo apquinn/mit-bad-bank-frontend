@@ -112,9 +112,15 @@ export default function Login() {
       if (user) {
         document.getElementById("loginFields").style.display = "none";
         document.getElementById("loggedin").style.display = "inline";
+        document.getElementById("li-deposit").style.display = "inline";
+        document.getElementById("li-withdrawl").style.display = "inline";
+        document.getElementById("li-alldata").style.display = "inline";
       } else {
         document.getElementById("loginFields").style.display = "inline";
         document.getElementById("loggedin").style.display = "none";
+        document.getElementById("li-deposit").style.display = "none";
+        document.getElementById("li-withdrawl").style.display = "none";
+        document.getElementById("li-alldata").style.display = "none";
       }
     });
   })();

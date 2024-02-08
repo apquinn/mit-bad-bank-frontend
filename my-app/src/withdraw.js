@@ -11,9 +11,6 @@ export default function Withdraw() {
   const [withdrawl, setWithdrawl] = React.useState("");
   const ctx = React.useContext(UserContext);
 
-  let localLoggedIn = false;
-  if (findCurrentAttribute("name", ctx) !== "") localLoggedIn = true;
-
   if (balance === "" && findCurrentAttribute("balance", ctx) !== "")
     setBalance(findCurrentAttribute("balance", ctx));
 
@@ -24,31 +21,23 @@ export default function Withdraw() {
         header="Withdrawl"
         status={status}
         body={
-          localLoggedIn ? (
-            <DisplayAmountForm
-              balance={balance}
-              setAmount={setWithdrawl}
-              amount={withdrawl}
-              type="Withdrawl"
-              handleOnclick={() =>
-                handleTransaction(
-                  withdrawl,
-                  setWithdrawl,
-                  ctx,
-                  balance,
-                  setBalance,
-                  setStatus,
-                  "withdrawl"
-                )
-              }
-            />
-          ) : (
-            <>
-              <h5>Notice</h5>
-              <p>You must be logged in to make a withdrawl.</p>
-              <br />
-            </>
-          )
+          <DisplayAmountForm
+            balance={balance}
+            setAmount={setWithdrawl}
+            amount={withdrawl}
+            type="Withdrawl"
+            handleOnclick={() =>
+              handleTransaction(
+                withdrawl,
+                setWithdrawl,
+                ctx,
+                balance,
+                setBalance,
+                setStatus,
+                "withdrawl"
+              )
+            }
+          />
         }
       />
     </>

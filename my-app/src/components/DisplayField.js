@@ -7,7 +7,7 @@ export default function DisplayAccountField({
 }) {
   return (
     <>
-      <label for={id}>{name}</label>
+      <label htmlFor={id}>{name}</label>
       <input
         type={type}
         className="form-control"
