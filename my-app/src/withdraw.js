@@ -1,40 +1,47 @@
 import * as React from "react";
-import { findCurrentAttribute } from "./components/findAttribute.js";
 import DisplayAmountForm from "./components/DisplayAmountForm.js";
 import handleTransaction from "./components/handleTransaction.js";
 import Card from "./components/SCard.js";
+import { useEffect } from "react";
+import axios from "axios";
 import { UserContext } from "./contexts/usercontext.js";
 
-export default function Withdraw() {
-  const [status, setStatus] = React.useState("");
+export default function Deposit() {
   const [balance, setBalance] = React.useState("");
-  const [withdrawl, setWithdrawl] = React.useState("");
-  const ctx = React.useContext(UserContext);
+  const [amount, setAmount] = React.useState("");
+  const [status, setStatus] = React.useState("");
+  let email = sessionStorage.getItem("email");
 
-  if (balance === "" && findCurrentAttribute("balance", ctx) !== "")
-    setBalance(findCurrentAttribute("balance", ctx));
+  useEffect(() => {
+    var url = `http://localhost:3001/get-balance/${email}/${Date.now()}`;
+    axios.get(url).then((res) => {
+      let localBalance = res.data.balance
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      setBalance(localBalance);
+    });
+  }, []);
 
   return (
     <>
       <Card
         bgcolor="primary"
-        header="Withdrawl"
+        header="Deposit"
         status={status}
         body={
           <DisplayAmountForm
             balance={balance}
-            setAmount={setWithdrawl}
-            amount={withdrawl}
-            type="Withdrawl"
+            type="Withdrawal"
+            amount={amount}
+            setAmount={setAmount}
             handleOnclick={() =>
               handleTransaction(
-                withdrawl,
-                setWithdrawl,
-                ctx,
+                "Withdrawal",
+                email,
+                setAmount,
                 balance,
                 setBalance,
-                setStatus,
-                "withdrawl"
+                setStatus
               )
             }
           />

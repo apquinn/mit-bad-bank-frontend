@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 export default function DisplayAmountForm({
   balance,
-  setAmount,
-  amount,
-  handleOnclick,
   type,
+  handleOnclick,
+  amount,
+  setAmount,
 }) {
   useEffect(() => {
     const element = document.getElementById("submit-transaction");
@@ -12,7 +12,7 @@ export default function DisplayAmountForm({
   }, []);
 
   function handleChange(event) {
-    setAmount(event.currentTarget.value);
+    setAmount(document.getElementById("amount").value);
     const element = document.getElementById("submit-transaction");
     if (event.currentTarget.value === "") element.disabled = true;
     else element.disabled = false;
@@ -37,7 +37,7 @@ export default function DisplayAmountForm({
       <input
         type="number"
         className="form-control"
-        id="deposit"
+        id="amount"
         placeholder={type.toLowerCase() + " amount"}
         value={amount}
         onChange={handleChange}
@@ -49,7 +49,7 @@ export default function DisplayAmountForm({
         className="btn btn-light"
         onClick={handleOnclick}
       >
-        Deposit
+        {type}
       </button>
     </>
   );

@@ -1,18 +1,26 @@
 import * as React from "react";
-import { findCurrentAttribute } from "./components/findAttribute.js";
 import DisplayAmountForm from "./components/DisplayAmountForm.js";
 import handleTransaction from "./components/handleTransaction.js";
 import Card from "./components/SCard.js";
-import { UserContext } from "./contexts/usercontext.js";
+import { useEffect } from "react";
+import axios from "axios";
+import { getAuth } from "firebase/auth";
 
 export default function Deposit() {
-  const [status, setStatus] = React.useState("");
   const [balance, setBalance] = React.useState("");
-  const [deposit, setDeposit] = React.useState("");
-  const ctx = React.useContext(UserContext);
+  const [amount, setAmount] = React.useState("");
+  const [status, setStatus] = React.useState("");
+  let email = sessionStorage.getItem("email");
 
-  if (balance === "" && findCurrentAttribute("balance", ctx) !== "")
-    setBalance(findCurrentAttribute("balance", ctx));
+  useEffect(() => {
+    var url = `http://localhost:3001/get-balance/${email}/${Date.now()}`;
+    axios.get(url).then((res) => {
+      let localBalance = res.data.balance
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      setBalance(localBalance);
+    });
+  }, []);
 
   return (
     <>
@@ -23,18 +31,17 @@ export default function Deposit() {
         body={
           <DisplayAmountForm
             balance={balance}
-            setAmount={setDeposit}
-            amount={deposit}
             type="Deposit"
+            amount={amount}
+            setAmount={setAmount}
             handleOnclick={() =>
               handleTransaction(
-                deposit,
-                setDeposit,
-                ctx,
+                "deposit",
+                email,
+                setAmount,
                 balance,
                 setBalance,
-                setStatus,
-                "deposit"
+                setStatus
               )
             }
           />

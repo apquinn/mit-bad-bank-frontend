@@ -1,8 +1,5 @@
 import * as React from "react";
-import { useEffect } from "react";
-import { findCurrentAttribute } from "./components/findAttribute.js";
 import Card from "./components/SCard.js";
-import { UserContext } from "./contexts/usercontext.js";
 import DisplayField from "./components/DisplayField.js";
 import { initializeApp } from "firebase/app";
 import {
@@ -11,16 +8,13 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
+import axios from "axios";
+import { UserContext } from "./contexts/usercontext.js";
 
 export default function Login() {
-  const ctx = React.useContext(UserContext);
+  let globalEmail = React.useContext(UserContext);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-
-  useEffect(() => {
-    setEmail(findCurrentAttribute("email", ctx));
-    setPassword(findCurrentAttribute("password", ctx));
-  }, [ctx]);
 
   function validate(field, label) {
     if (field === "") {
@@ -30,66 +24,37 @@ export default function Login() {
     return true;
   }
 
-  function handleLogin() {
+  function handleLogin(globalEmail) {
     if (!validate(email, "email")) return;
     if (!validate(password, "password")) return;
 
-    const emailField = document.getElementById("email");
-    const passwordField = document.getElementById("password");
-
     const auth = getAuth();
-    signInWithEmailAndPassword(auth, emailField.value, passwordField.value)
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-
-        if (!user) {
+        if (!userCredential.user) {
           alert("Email or password invalid.");
           return "";
         }
+        sessionStorage.setItem("email", email);
 
-        ctx.users.map((user) => {
-          if (user.email === email && user.password === password) {
-            user.loggedin = true;
-
-            ctx.users.push({
-              type: "login",
-              name: user.name,
-              email: user.email,
-              action: "login",
-              balance: user.balance,
-            });
-          }
-          return "";
-        });
+        var url = `http://localhost:3001/login/${email}/${password}`;
+        axios.get(url).then((res) => {});
       })
-      .catch((e) => console.log(e.message));
+      .catch((e) => alert(e.message));
   }
 
-  function handleSignout() {
+  function handleLogout() {
     const auth = getAuth();
-    signOut(auth)
+    signOut(auth, email)
       .then(() => {
-        ctx.users.map((user) => {
-          if (user.type === "user") {
-            if (user.loggedin === true) {
-              ctx.users.push({
-                type: "login",
-                name: user.name,
-                email: user.email,
-                action: "logout",
-                balance: user.balance,
-              });
-            }
-            user.loggedin = false;
-          }
-          return "";
-        });
+        var url = `http://localhost:3001/logout/${email}`;
+        axios.get(url).then((res) => {});
+
         setEmail("");
         setPassword("");
       })
       .catch((error) => {
-        console.log(error.message);
+        alert(error.message);
       });
   }
 
@@ -115,12 +80,15 @@ export default function Login() {
         document.getElementById("li-deposit").style.display = "inline";
         document.getElementById("li-withdrawl").style.display = "inline";
         document.getElementById("li-alldata").style.display = "inline";
+        document.getElementById("status").innerHTML =
+          user.email + " is logged in.";
       } else {
         document.getElementById("loginFields").style.display = "inline";
         document.getElementById("loggedin").style.display = "none";
         document.getElementById("li-deposit").style.display = "none";
         document.getElementById("li-withdrawl").style.display = "none";
         document.getElementById("li-alldata").style.display = "none";
+        document.getElementById("status").innerHTML = "";
       }
     });
   })();
@@ -151,19 +119,19 @@ export default function Login() {
               <button
                 type="submit"
                 className="btn btn-light"
-                onClick={handleLogin}
+                onClick={() => handleLogin(globalEmail)}
               >
                 Login
               </button>
             </div>
             <div id="loggedin" key="loggedin" style={{ display: "none" }}>
               <h5>Success</h5>
-              <p>{findCurrentAttribute("name", ctx)} is logged in.</p>
+              <p id="status"></p>
               <br />
               <button
                 type="submit"
                 className="btn btn-light"
-                onClick={handleSignout}
+                onClick={handleLogout}
               >
                 logout
               </button>
