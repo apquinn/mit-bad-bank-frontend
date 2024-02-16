@@ -1,25 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import NavbarItem from "./NavbarItem.js";
-
-const useReactPath = () => {
-  const [path, setPath] = useState(window.location.hash);
-  const listenToPopstate = () => {
-    setPath(window.location.hash);
-  };
-  useEffect(() => {
-    window.addEventListener("popstate", listenToPopstate);
-  }, []);
-  return path;
-};
+import { handleLogout } from "../utils/endpoints/auth";
+import { jwtDecode } from "jwt-decode";
 
 export default function NavBar() {
-  const path = useReactPath();
+  if (window.history) {
+    window.addEventListener("hashchange", myFunction);
+  }
+
+  let token = localStorage.getItem("token");
   useEffect(() => {
+    if (localStorage.getItem("token") !== null) {
+      document.getElementById("logout-button").style.display = "inline";
+      document.getElementById("li-deposit").style.display = "inline";
+      document.getElementById("li-withdrawl").style.display = "inline";
+      document.getElementById("li-transfer").style.display = "inline";
+      document.getElementById("li-alldata").style.display = "inline";
+    } else {
+      document.getElementById("logout-button").style.display = "none";
+      document.getElementById("li-deposit").style.display = "none";
+      document.getElementById("li-withdrawl").style.display = "none";
+      document.getElementById("li-transfer").style.display = "none";
+      document.getElementById("li-alldata").style.display = "none";
+    }
+  }, [token]);
+
+  function myFunction() {
     document.getElementById("createaccount").classList.remove("active");
     document.getElementById("login").classList.remove("active");
     document.getElementById("deposit").classList.remove("active");
     document.getElementById("withdrawl").classList.remove("active");
+    document.getElementById("transfer").classList.remove("active");
     document.getElementById("alldata").classList.remove("active");
     if (window.location.hash === "#/createaccount/")
       document.getElementById("createaccount").classList.add("active");
@@ -29,9 +41,17 @@ export default function NavBar() {
       document.getElementById("deposit").classList.add("active");
     else if (window.location.hash === "#/withdrawl/")
       document.getElementById("withdrawl").classList.add("active");
+    else if (window.location.hash === "#/transfer/")
+      document.getElementById("transfer").classList.add("active");
     else if (window.location.hash === "#/alldata/")
       document.getElementById("alldata").classList.add("active");
-  }, [path]);
+  }
+
+  const handleLogoutLocal = async () => {
+    handleLogout(localStorage.getItem("email"));
+  };
+
+  const decoded = jwtDecode(token);
 
   return (
     <>
@@ -73,11 +93,26 @@ export default function NavBar() {
               title="Withdraw"
             />
             <NavbarItem
+              message="Use this page to transfer money to another user."
+              link="transfer"
+              title="Transfer"
+            />
+            <NavbarItem
               message="This page will display all the data for users and accounts"
               link="alldata"
               title="View All Data"
             />
           </ul>
+        </div>
+        <div
+          className="navbar-text"
+          style={{ float: "right", display: "inline-block" }}
+        >
+          <span id="account-name">{decoded.email}</span> &nbsp; &nbsp;{" "}
+          <a href="/#/login/" id="logout-button" onClick={handleLogoutLocal}>
+            logout
+          </a>
+          &nbsp; &nbsp;
         </div>
       </nav>
     </>

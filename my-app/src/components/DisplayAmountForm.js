@@ -1,15 +1,17 @@
 import { useEffect } from "react";
+
 export default function DisplayAmountForm({
   balance,
   type,
   handleOnclick,
   amount,
   setAmount,
+  select,
 }) {
   useEffect(() => {
     const element = document.getElementById("submit-transaction");
     element.disabled = true;
-  }, []);
+  }, [type]);
 
   function handleChange(event) {
     setAmount(document.getElementById("amount").value);
@@ -43,6 +45,7 @@ export default function DisplayAmountForm({
         onChange={handleChange}
       />
       <br />
+      {select}
       <button
         id="submit-transaction"
         type="submit"

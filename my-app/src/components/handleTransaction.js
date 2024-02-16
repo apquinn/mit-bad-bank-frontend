@@ -30,29 +30,46 @@ export default function handleTransaction(
   setAmount,
   balance,
   setBalance,
+  recipient,
   setStatus
 ) {
+  function callFinal(res) {
+    let localBalance = res.data.balance
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    setBalance(localBalance);
+  }
+
   let amount = document.getElementById("amount").value;
 
   if (!validate(amount, "amount")) return;
+  if (type === "Transfer" && !validate(recipient, "recipient")) return;
 
-  if (type === "Withdrawal") amount = 0 - Number(amount);
+  if (type === "Withdrawal" || type === "Transfer") amount = 0 - Number(amount);
 
   if (email !== "") {
-    if (type === "Withdrawal" && Number(balance) + Number(amount) < 0) {
+    if (
+      (type === "Withdrawal" || type === "Transfer") &&
+      Number(balance) + Number(amount) < 0
+    ) {
       alert(
         "Your balance will not cover the amount you are trying to withdraw. Please try a smaller amount."
       );
       setTimeout(() => setStatus(""), 3000);
       setAmount(0);
     } else {
-      var url = `http://localhost:3001/transaction/${email}/${amount}/transaction/${type}/`;
-      axios.get(url).then((res) => {
-        let localBalance = res.data.balance
-          .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        setBalance(localBalance);
-      });
+      var url = "";
+      if (type === "Transfer") {
+        url = `http://localhost:3001/transfer/${email}/${recipient}/${amount}/transaction/${type}/`;
+        axios.get(url).then((res) => {
+          callFinal(res);
+        });
+      } else {
+        url = `http://localhost:3001/transaction/${email}/${amount}/transaction/${type}/`;
+        axios.get(url).then((res) => {
+          callFinal(res);
+        });
+      }
 
       setAmount(0);
       setStatus(type + " was successful");

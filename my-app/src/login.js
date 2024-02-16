@@ -1,18 +1,11 @@
+import { handleLogin } from "./utils/endpoints/auth";
 import * as React from "react";
+import { useEffect } from "react";
 import Card from "./components/SCard.js";
 import DisplayField from "./components/DisplayField.js";
-import { initializeApp } from "firebase/app";
-import {
-  signInWithEmailAndPassword,
-  getAuth,
-  signOut,
-  onAuthStateChanged,
-} from "firebase/auth";
-import axios from "axios";
-import { UserContext } from "./contexts/usercontext.js";
+import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
-  let globalEmail = React.useContext(UserContext);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -24,74 +17,36 @@ export default function Login() {
     return true;
   }
 
-  function handleLogin(globalEmail) {
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      let decoded = jwtDecode(localStorage.getItem("token"));
+
+      document.getElementById("loginFields").style.display = "none";
+      document.getElementById("loggedin").style.display = "inline";
+      document.getElementById("status").innerHTML =
+        decoded.email + " is logged in.";
+    }
+  }, []);
+
+  async function handleLoginLocal() {
     if (!validate(email, "email")) return;
     if (!validate(password, "password")) return;
 
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        if (!userCredential.user) {
-          alert("Email or password invalid.");
-          return "";
-        }
-        sessionStorage.setItem("email", email);
-
-        var url = `http://localhost:3001/login/${email}/${password}`;
-        axios.get(url).then((res) => {});
-      })
-      .catch((e) => alert(e.message));
+    const response = await handleLogin(email, password);
+    if (response) {
+      document.getElementById("loginFields").style.display = "none";
+      document.getElementById("loggedin").style.display = "inline";
+      document.getElementById("li-deposit").style.display = "inline";
+      document.getElementById("li-withdrawl").style.display = "inline";
+      document.getElementById("li-transfer").style.display = "inline";
+      document.getElementById("li-alldata").style.display = "inline";
+      document.getElementById("status").innerHTML = email + " is logged in.";
+      document.getElementById("account-name").innerHTML = email;
+      document.getElementById("logout-button").style.display = "inline";
+      setEmail("");
+      setPassword("");
+    }
   }
-
-  function handleLogout() {
-    const auth = getAuth();
-    signOut(auth, email)
-      .then(() => {
-        var url = `http://localhost:3001/logout/${email}`;
-        axios.get(url).then((res) => {});
-
-        setEmail("");
-        setPassword("");
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-  }
-
-  (function () {
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBM3Kol97p3vu1iVSLX9VwM8J3b4xLiPKU",
-      authDomain: "course-8d11e.firebaseapp.com",
-      databaseURL: "https://course-8d11e-default-rtdb.firebaseio.com",
-      projectId: "course-8d11e",
-      storageBucket: "course-8d11e.appspot.com",
-      messagingSenderId: "646016197490",
-      appId: "1:646016197490:web:aceb1987b39da44fc2b3eb",
-    };
-    // Initialize Firebase
-    initializeApp(firebaseConfig);
-
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById("loginFields").style.display = "none";
-        document.getElementById("loggedin").style.display = "inline";
-        document.getElementById("li-deposit").style.display = "inline";
-        document.getElementById("li-withdrawl").style.display = "inline";
-        document.getElementById("li-alldata").style.display = "inline";
-        document.getElementById("status").innerHTML =
-          user.email + " is logged in.";
-      } else {
-        document.getElementById("loginFields").style.display = "inline";
-        document.getElementById("loggedin").style.display = "none";
-        document.getElementById("li-deposit").style.display = "none";
-        document.getElementById("li-withdrawl").style.display = "none";
-        document.getElementById("li-alldata").style.display = "none";
-        document.getElementById("status").innerHTML = "";
-      }
-    });
-  })();
 
   return (
     <>
@@ -119,22 +74,20 @@ export default function Login() {
               <button
                 type="submit"
                 className="btn btn-light"
-                onClick={() => handleLogin(globalEmail)}
+                onClick={handleLoginLocal}
               >
                 Login
               </button>
+              <br />
+              <br />
+              <span className="white-link">
+                <a href="/#/createaccount/">Need an account? Sign up here!</a>
+              </span>{" "}
             </div>
             <div id="loggedin" key="loggedin" style={{ display: "none" }}>
               <h5>Success</h5>
               <p id="status"></p>
               <br />
-              <button
-                type="submit"
-                className="btn btn-light"
-                onClick={handleLogout}
-              >
-                logout
-              </button>
             </div>
           </>
         }

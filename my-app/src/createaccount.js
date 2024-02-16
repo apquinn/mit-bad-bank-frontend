@@ -1,58 +1,14 @@
 import * as React from "react";
-import { useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Form } from "react-bootstrap";
+import { handleSignup } from "./utils/endpoints/auth";
 import Card from "./components/SCard.js";
-import "bootstrap/dist/css/bootstrap.css";
-import { UserContext } from "./contexts/usercontext.js";
 import DisplayField from "./components/DisplayField.js";
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import axios from "axios";
 
-(function () {
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBM3Kol97p3vu1iVSLX9VwM8J3b4xLiPKU",
-    authDomain: "course-8d11e.firebaseapp.com",
-    databaseURL: "https://course-8d11e-default-rtdb.firebaseio.com",
-    projectId: "course-8d11e",
-    storageBucket: "course-8d11e.appspot.com",
-    messagingSenderId: "646016197490",
-    appId: "1:646016197490:web:aceb1987b39da44fc2b3eb",
-  };
-  // Initialize Firebase
-  initializeApp(firebaseConfig);
+export default function Auth() {
+  const [show, setShow] = useState(true);
 
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      document.getElementById("li-deposit").style.display = "inline";
-      document.getElementById("li-withdrawl").style.display = "inline";
-      document.getElementById("li-alldata").style.display = "inline";
-    } else {
-      document.getElementById("li-deposit").style.display = "none";
-      document.getElementById("li-withdrawl").style.display = "none";
-      document.getElementById("li-alldata").style.display = "none";
-    }
-  });
-})();
-
-export default function CreateAccount() {
-  let globalEmail = React.useContext(UserContext);
-
-  useEffect(() => {
-    const element = document.getElementById("submit-button");
-    element.disabled = true;
-  }, []);
-
-  const [show, setShow] = React.useState(true);
-  const [status] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  useEffect(() => {}, []);
 
   function validate(field, label) {
     if (!field) {
@@ -66,101 +22,104 @@ export default function CreateAccount() {
     return true;
   }
 
-  function handleCreate(globalEmail) {
-    if (!validate(name, "name")) return;
-    if (!validate(email, "email")) return;
-    if (!validate(password, "password")) return;
-
-    const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        var url = `http://localhost:3001/account/create/${name}/${email}/${password}`;
-        axios.get(url).then((res) => {
-          setShow(false);
-          alert("Successfully created account.");
-        });
-      })
-      .catch((e) => alert(e.message));
-  }
-
   function clearForm() {
-    setName("");
-    setEmail("");
-    setPassword("");
     setShow(true);
   }
 
-  function disableButton(event) {
-    const element = document.getElementById("submit-button");
-    if (element !== undefined) {
-      if (event.currentTarget.value === "" && email === "" && password === "")
-        element.disabled = true;
-      else element.disabled = false;
+  const handleCreate = async (signupData) => {
+    if (!validate(signupData.name, "name")) return;
+    if (!validate(signupData.email, "email")) return;
+    if (!validate(signupData.password, "password")) return;
+
+    const response = await handleSignup(signupData);
+    if (response === true) {
+      console.log("HERE");
+      setShow(false);
+      document.getElementById("account-name").innerHTML = signupData.email;
+      document.getElementById("logout-button").style.display = "inline";
+    } else {
+      alert(response);
     }
-  }
-
-  function handleChangeName(event) {
-    setName(event.currentTarget.value);
-    disableButton(event);
-  }
-
-  function handleChangeEmail(event) {
-    setEmail(event.currentTarget.value);
-    disableButton(event);
-  }
-
-  function handleChangePassword(event) {
-    setPassword(event.currentTarget.value);
-    disableButton(event);
-  }
+  };
 
   return (
-    <Card
-      bgcolor="primary"
-      header="Create Account"
-      status={status}
-      body={
-        show ? (
-          <>
-            <DisplayField
-              type="input"
-              id="name"
-              value={name}
-              name="Name"
-              handleChange={handleChangeName}
-            />
-            <DisplayField
-              type="input"
-              id="email"
-              value={email}
-              name="Email address"
-              handleChange={handleChangeEmail}
-            />
-            <DisplayField
-              type="password"
-              id="password"
-              value={password}
-              name="Password"
-              handleChange={handleChangePassword}
-            />
-            <button
-              id="submit-button"
-              type="submit"
-              className="btn btn-light"
-              onClick={() => handleCreate(globalEmail)}
-            >
-              Create Account
-            </button>
-          </>
-        ) : (
-          <>
-            <h5>Success</h5>
-            <button type="submit" className="btn btn-light" onClick={clearForm}>
-              Add another account
-            </button>
-          </>
-        )
-      }
-    />
+    <>
+      <Card
+        bgcolor="primary"
+        header="Create Account"
+        body={
+          show ? (
+            <>
+              <Form>
+                <DisplayField type="input" id="name" name="Name" />
+                <DisplayField type="input" id="email" name="Email address" />
+                <DisplayField type="password" id="password" name="Password" />
+                Account type
+                <br />
+                <input
+                  type="radio"
+                  id="customer"
+                  name="userType"
+                  value="customer"
+                  checked
+                />
+                &nbsp;
+                <label htmlFor="customer">Customer</label>
+                &nbsp; &nbsp; &nbsp;
+                <input
+                  type="radio"
+                  id="employee"
+                  name="userType"
+                  value="employee"
+                />
+                &nbsp;
+                <label htmlFor="employee">Employee</label>
+                <br />
+                <br />
+                <button
+                  id="submit-button"
+                  type="submit"
+                  className="btn btn-light"
+                  onClick={(e) => {
+                    var userType = "";
+                    var ele = document.getElementsByName("userType");
+                    for (let i = 0; i < ele.length; i++) {
+                      if (ele[i].checked) userType = ele[i].value;
+                    }
+
+                    const signupData = {
+                      name: document.getElementById("name").value,
+                      email: document.getElementById("email").value,
+                      password: document.getElementById("password").value,
+                      userType: userType,
+                    };
+
+                    handleCreate(signupData);
+                  }}
+                >
+                  Create Account
+                </button>
+                <br />
+                <br />
+                <span className="white-link">
+                  <a href="/#/login/">Already have an account?</a>
+                </span>
+              </Form>
+            </>
+          ) : (
+            <>
+              <h5>Success</h5>
+              <button
+                type="submit"
+                className="btn btn-light"
+                onClick={clearForm}
+              >
+                Add another account
+              </button>
+            </>
+          )
+        }
+      />
+    </>
   );
 }

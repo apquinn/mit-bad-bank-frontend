@@ -6,9 +6,9 @@ import CreateAccount from "./createaccount.js";
 import Login from "./login.js";
 import Deposit from "./deposit.js";
 import Withdraw from "./withdraw.js";
+import Transfer from "./transfer.js";
 import AllData from "./alldata.js";
-import { UserContext } from "./contexts/usercontext.js";
-import { getAuth } from "firebase/auth";
+import PrivateRoute from "./components/PrivateRoute.js";
 
 export function App() {
   return (
@@ -19,9 +19,38 @@ export function App() {
           <Route path="/" exact element={<Home />} />
           <Route path="/createaccount/" element={<CreateAccount />} />
           <Route path="/login/" element={<Login />} />
-          <Route path="/deposit/" element={<Deposit />} />
-          <Route path="/withdrawl/" element={<Withdraw />} />
-          <Route path="/alldata/" element={<AllData />} />
+          <Route
+            path="/deposit/"
+            element={
+              <PrivateRoute>
+                <Deposit />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/withdrawl/"
+            element={
+              <PrivateRoute>
+                <Withdraw />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/transfer/"
+            element={
+              <PrivateRoute>
+                <Transfer />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/alldata/"
+            element={
+              <PrivateRoute>
+                <AllData />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </div>
     </HashRouter>
