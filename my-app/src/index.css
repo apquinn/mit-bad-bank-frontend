@@ -21,10 +21,20 @@ code {
   background: none;
   border: none;
   padding: 0;
-  /*optional*/
-  font-family: arial, sans-serif;
-  /*input has OS specific font-family*/
   color: #069;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.close-account-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.account-li {
+  margin-bottom: 10px;
 }

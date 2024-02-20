@@ -51,7 +51,13 @@ export default function NavBar() {
     handleLogout(localStorage.getItem("email"));
   };
 
-  const decoded = jwtDecode(token);
+  let email = "";
+  if (localStorage.getItem("token")) {
+    const decoded = jwtDecode(localStorage.getItem("token"));
+    email = decoded.email;
+  } else {
+    email = "";
+  }
 
   return (
     <>
@@ -108,7 +114,10 @@ export default function NavBar() {
           className="navbar-text"
           style={{ float: "right", display: "inline-block" }}
         >
-          <span id="account-name">{decoded.email}</span> &nbsp; &nbsp;{" "}
+          <a href="/#/profile">
+            <span id="account-name">{email}</span>
+          </a>{" "}
+          &nbsp; &nbsp;{" "}
           <a href="/#/login/" id="logout-button" onClick={handleLogoutLocal}>
             logout
           </a>

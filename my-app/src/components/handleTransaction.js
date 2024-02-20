@@ -6,8 +6,8 @@ function validate(field, label) {
     return false;
   }
 
-  if (Number(field) < 0) {
-    alert("Error: " + label + " cannot be negative");
+  if (Number(field) <= 0) {
+    alert("Error: " + label + " cannot be negative or zero");
     return false;
   }
 
@@ -27,10 +27,12 @@ function validate(field, label) {
 export default function handleTransaction(
   type,
   email,
+  emailAccount,
   setAmount,
   balance,
   setBalance,
   recipient,
+  recipientAccount,
   setStatus
 ) {
   function callFinal(res) {
@@ -43,7 +45,20 @@ export default function handleTransaction(
   let amount = document.getElementById("amount").value;
 
   if (!validate(amount, "amount")) return;
-  if (type === "Transfer" && !validate(recipient, "recipient")) return;
+  if (!validate(email, "email")) return;
+  if (!validate(emailAccount, "account")) return;
+  if (type === "Transfer") {
+    if (!validate(recipient, "recipient")) {
+      return;
+    }
+    if (!validate(recipientAccount, "recipient account")) {
+      return;
+    }
+    if (recipient === email && recipientAccount === emailAccount) {
+      alert("You cannot transfer money into the same account");
+      return;
+    }
+  }
 
   if (type === "Withdrawal" || type === "Transfer") amount = 0 - Number(amount);
 
@@ -60,12 +75,12 @@ export default function handleTransaction(
     } else {
       var url = "";
       if (type === "Transfer") {
-        url = `http://localhost:3001/transfer/${email}/${recipient}/${amount}/transaction/${type}/`;
+        url = `http://localhost:3001/transfer/${email}/${emailAccount}/${recipient}/${recipientAccount}/${amount}/transaction/${type}/`;
         axios.get(url).then((res) => {
           callFinal(res);
         });
       } else {
-        url = `http://localhost:3001/transaction/${email}/${amount}/transaction/${type}/`;
+        url = `http://localhost:3001/transaction/${email}/${amount}/transaction/${type}/${emailAccount}`;
         axios.get(url).then((res) => {
           callFinal(res);
         });

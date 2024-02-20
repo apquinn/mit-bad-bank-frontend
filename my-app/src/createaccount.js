@@ -33,7 +33,6 @@ export default function Auth() {
 
     const response = await handleSignup(signupData);
     if (response === true) {
-      console.log("HERE");
       setShow(false);
       document.getElementById("account-name").innerHTML = signupData.email;
       document.getElementById("logout-button").style.display = "inline";
@@ -61,7 +60,7 @@ export default function Auth() {
                   id="customer"
                   name="userType"
                   value="customer"
-                  checked
+                  defaultChecked
                 />
                 &nbsp;
                 <label htmlFor="customer">Customer</label>

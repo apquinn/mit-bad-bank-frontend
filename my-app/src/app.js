@@ -8,6 +8,7 @@ import Deposit from "./deposit.js";
 import Withdraw from "./withdraw.js";
 import Transfer from "./transfer.js";
 import AllData from "./alldata.js";
+import Profile from "./profile.js";
 import PrivateRoute from "./components/PrivateRoute.js";
 
 export function App() {
@@ -51,6 +52,7 @@ export function App() {
               </PrivateRoute>
             }
           />
+          <Route path="/profile/" element={<Profile />} />
         </Routes>
       </div>
     </HashRouter>
