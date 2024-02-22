@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import { addOption, removeOptions } from "./optionFunctions.js";
+import { addOption, removeOptions } from "../utils/optionFunctions.js";
 
 export default function DisplayAccountSelection({
   onChangeAction,

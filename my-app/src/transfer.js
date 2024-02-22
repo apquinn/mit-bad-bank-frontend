@@ -1,6 +1,6 @@
 import * as React from "react";
 import DisplayAmountForm from "./components/DisplayAmountForm.js";
-import handleTransaction from "./components/handleTransaction.js";
+import handleTransaction from "./utils/handleTransaction.js";
 import Card from "./components/SCard.js";
 import { useEffect } from "react";
 import axios from "axios";
@@ -27,19 +27,6 @@ export default function Transfer() {
     } else {
       setBalance(0);
     }
-
-    /*
-    if (emailRecipient !== "") {
-      axios.get(`http://localhost:3001/get-users/${email}`).then((res) => {
-        removeOptions("recipientUserSelect");
-        addOption("recipientUserSelect", "");
-        options = res.data.trans;
-        for (let i = 0; i < options.length; i++) {
-          addOption("recipientUserSelect", options[i].name);
-        }
-      });
-    }
-		*/
   }, [account, email]);
 
   return (

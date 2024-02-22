@@ -1,4 +1,4 @@
-import NavBar from "./components/navbar.js";
+import NavBar from "./utils/navbar.js";
 import * as React from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import Home from "./home.js";

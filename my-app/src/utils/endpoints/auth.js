@@ -10,7 +10,9 @@ const handleSignup = async (user) => {
 
       return true;
     }
-    return response.data;
+
+    alert(response.data);
+    return false;
   } catch (err) {
     console.error(err);
     return false;
@@ -50,6 +52,7 @@ const handleLogout = async () => {
 
     document.getElementById("li-deposit").style.display = "none";
     document.getElementById("li-withdrawl").style.display = "none";
+    document.getElementById("li-transfer").style.display = "none";
     document.getElementById("li-alldata").style.display = "none";
 
     document.getElementById("account-name").innerHTML = "";

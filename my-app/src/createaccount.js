@@ -26,7 +26,8 @@ export default function Auth() {
     setShow(true);
   }
 
-  const handleCreate = async (signupData) => {
+  const handleCreate = async (e, signupData) => {
+    e.preventDefault();
     if (!validate(signupData.name, "name")) return;
     if (!validate(signupData.email, "email")) return;
     if (!validate(signupData.password, "password")) return;
@@ -36,8 +37,11 @@ export default function Auth() {
       setShow(false);
       document.getElementById("account-name").innerHTML = signupData.email;
       document.getElementById("logout-button").style.display = "inline";
-    } else {
-      alert(response);
+
+      document.getElementById("li-deposit").style.display = "inline";
+      document.getElementById("li-withdrawl").style.display = "inline";
+      document.getElementById("li-transfer").style.display = "inline";
+      document.getElementById("li-alldata").style.display = "inline";
     }
   };
 
@@ -93,7 +97,7 @@ export default function Auth() {
                       userType: userType,
                     };
 
-                    handleCreate(signupData);
+                    handleCreate(e, signupData);
                   }}
                 >
                   Create Account

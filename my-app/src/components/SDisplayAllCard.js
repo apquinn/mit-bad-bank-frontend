@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { useEffect } from "react";
 import axios from "axios";
 import DisplayAccountSelection from "./DisplayAccountSelection.js";
-import displayResults from "./displayResults.js";
+import displayResults from "../utils/displayResults.js";
 import { jwtDecode } from "jwt-decode";
 
 export default function DisplayAllCard({ propsHeader, select }) {

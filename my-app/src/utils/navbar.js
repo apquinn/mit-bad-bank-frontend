@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import NavbarItem from "./NavbarItem.js";
-import { handleLogout } from "../utils/endpoints/auth";
+import NavbarItem from "../components/NavbarItem.js";
+import { handleLogout } from "./endpoints/auth.js";
 import { jwtDecode } from "jwt-decode";
 
 export default function NavBar() {
