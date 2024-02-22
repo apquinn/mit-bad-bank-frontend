@@ -1,7 +1,5 @@
 # Bad Bank Example
 
-### This is an application for creating accounts, logging users in, making deposits and withdrawls and checking balances. However, it does not contain adequate security and is thus a "bad bank" example.
-
 ### Author: Drew Quinn
 
 ### Functionality
@@ -19,5 +17,7 @@
 #### Employees can transfer between any user accounts, withdraw of deposit into any user account, and view transactions for user accounts. In addition to viewing user transactions, they can delete transactions such as overdraft fees or fraudulent transactions.
 
 #### Balances are updated based on transaction totals, not on balance listed in the transaction record. This allows transactions to be deleted and added without the balance becoming invalid.
+
+#### Secured with JSON web tokens
 
 #### Styled with Bootstrap
