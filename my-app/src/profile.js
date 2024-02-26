@@ -12,12 +12,12 @@ export default function Profile() {
   let accountOutput = [];
 
   useEffect(() => {
-    var url = `http://localhost:3001/get-profile/${email}`;
+    var url = `${localStorage.getItem("api-url")}/get-profile/${email}`;
     axios.get(url).then((res) => {
       setUserData(res.data.trans[0]);
     });
 
-    url = `http://localhost:3001/get-accounts/${email}`;
+    url = `${localStorage.getItem("api-url")}/get-accounts/${email}`;
     axios.get(url).then((res) => {
       setAccounts(res.data.trans);
     });
@@ -57,7 +57,7 @@ export default function Profile() {
   }
 
   function addAccount() {
-    var url = `http://localhost:3001/add-account/${email}/${
+    var url = `${localStorage.getItem("api-url")}/add-account/${email}/${
       document.getElementById("accountName").value
     }`;
     axios.get(url).then((res) => {
@@ -71,7 +71,9 @@ export default function Profile() {
   }
 
   function closeAccount(e) {
-    var url = `http://localhost:3001/close-account/${email}/${e.target.id}`;
+    var url = `${localStorage.getItem("api-url")}/close-account/${email}/${
+      e.target.id
+    }`;
     axios.get(url).then((res) => {
       if (typeof res.data === "string") {
         alert(res.data);

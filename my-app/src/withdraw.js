@@ -15,9 +15,10 @@ export default function Deposit() {
 
   useEffect(() => {
     if (email !== "" && account !== "") {
-      var url = `http://localhost:3001/get-balance/${email}/${Date.now()}/${account}`;
+      var url = `${localStorage.getItem(
+        "api-url"
+      )}/get-balance/${email}/${Date.now()}/${account}`;
       axios.get(url).then((res) => {
-        console.log(res.data.balance);
         let localBalance = res.data.balance
           .toString()
           .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -30,7 +31,7 @@ export default function Deposit() {
     <>
       <Card
         bgcolor="primary"
-        header="Deposit"
+        header="Withdraw"
         status={status}
         body={
           <>

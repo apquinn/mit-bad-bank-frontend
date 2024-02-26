@@ -75,12 +75,16 @@ export default function handleTransaction(
     } else {
       var url = "";
       if (type === "Transfer") {
-        url = `http://localhost:3001/transfer/${email}/${emailAccount}/${recipient}/${recipientAccount}/${amount}/transaction/${type}/`;
+        url = `${localStorage.getItem(
+          "api-url"
+        )}/transfer/${email}/${emailAccount}/${recipient}/${recipientAccount}/${amount}/transaction/${type}/`;
         axios.get(url).then((res) => {
           callFinal(res);
         });
       } else {
-        url = `http://localhost:3001/transaction/${email}/${amount}/transaction/${type}/${emailAccount}`;
+        url = `${localStorage.getItem(
+          "api-url"
+        )}/transaction/${email}/${amount}/transaction/${type}/${emailAccount}`;
         axios.get(url).then((res) => {
           callFinal(res);
         });

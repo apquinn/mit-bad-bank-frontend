@@ -1,7 +1,6 @@
 import Card from "./components/SCard.js";
 
 export default function Home() {
-  console.log(localStorage.getItem("token"));
   return (
     <>
       <Card

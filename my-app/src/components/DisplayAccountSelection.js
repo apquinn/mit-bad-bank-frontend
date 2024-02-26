@@ -29,16 +29,20 @@ export default function DisplayAccountSelection({
     setEmail(decoded.email);
     if (decoded.email !== "") {
       if (decoded.userType === "employee" || displayUser === true) {
-        axios.get(`http://localhost:3001/get-all-customers`).then((res) => {
-          removeOptions(selectID);
-          addOption(selectID, "");
-          options = res.data.trans;
-          for (let i = 0; i < options.length; i++) {
-            addOption(selectID, options[i].email);
-          }
-        });
+        axios
+          .get(`${localStorage.getItem("api-url")}/get-all-customers`)
+          .then((res) => {
+            removeOptions(selectID);
+            addOption(selectID, "");
+            options = res.data.trans;
+            for (let i = 0; i < options.length; i++) {
+              addOption(selectID, options[i].email);
+            }
+          });
       } else {
-        var url = `http://localhost:3001/get-accounts/${decoded.email}`;
+        var url = `${localStorage.getItem("api-url")}/get-accounts/${
+          decoded.email
+        }`;
         axios.get(url).then((res) => {
           removeOptions(selectIDAccount);
           addOption(selectIDAccount, "");
@@ -57,7 +61,9 @@ export default function DisplayAccountSelection({
     setAccount("");
 
     if (e.target.value !== "") {
-      var url = `http://localhost:3001/get-accounts/${e.target.value}`;
+      var url = `${localStorage.getItem("api-url")}/get-accounts/${
+        e.target.value
+      }`;
       axios.get(url).then((res) => {
         removeOptions(selectIDAccount);
         addOption(selectIDAccount, "");

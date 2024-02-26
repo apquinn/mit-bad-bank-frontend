@@ -16,7 +16,9 @@ export default function DisplayAllCard({ propsHeader, select }) {
 
   useEffect(() => {
     if (email !== "" && account !== "") {
-      var url = `http://localhost:3001/get-all-transactions/${email}/${account}/${Date.now()}`;
+      var url = `${localStorage.getItem(
+        "api-url"
+      )}/get-all-transactions/${email}/${account}/${Date.now()}`;
       axios.get(url).then((res) => {
         setResults(res.data);
       });
@@ -26,7 +28,9 @@ export default function DisplayAllCard({ propsHeader, select }) {
   }, [email, account]);
 
   function handleDelete(e) {
-    var url = `http://localhost:3001/delete-transaction/${e.target.id}/${email}`;
+    var url = `${localStorage.getItem("api-url")}/delete-transaction/${
+      e.target.id
+    }/${email}/${account}`;
     axios.get(url).then((res) => {
       setResults(res.data);
     });

@@ -2,9 +2,12 @@ import axios from "axios";
 
 const handleSignup = async (user) => {
   try {
-    const response = await axios.post("http://localhost:3001/signup", {
-      user,
-    });
+    const response = await axios.post(
+      `${localStorage.getItem("api-url")}/signup`,
+      {
+        user,
+      }
+    );
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
 
@@ -21,10 +24,13 @@ const handleSignup = async (user) => {
 
 const handleLogin = async (email, password) => {
   try {
-    const response = await axios.post("http://localhost:3001/login", {
-      email,
-      password,
-    });
+    const response = await axios.post(
+      `${localStorage.getItem("api-url")}/login`,
+      {
+        email,
+        password,
+      }
+    );
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
       return true;
@@ -40,7 +46,9 @@ const handleLogin = async (email, password) => {
 const handleLogout = async () => {
   if (localStorage.getItem("token")) {
     const response = await axios.get(
-      `http://localhost:3001/logout/${localStorage.getItem("email")}`
+      `${localStorage.getItem("api-url")}/logout/${localStorage.getItem(
+        "email"
+      )}`
     );
 
     localStorage.removeItem("token");

@@ -15,7 +15,9 @@ export default function Deposit() {
 
   useEffect(() => {
     if (email !== "" && account !== "") {
-      var url = `http://localhost:3001/get-balance/${email}/${Date.now()}/${account}`;
+      var url = `${localStorage.getItem(
+        "api-url"
+      )}/get-balance/${email}/${Date.now()}/${account}`;
       axios.get(url).then((res) => {
         let localBalance = res.data.balance
           .toString()

@@ -17,7 +17,9 @@ export default function Transfer() {
 
   useEffect(() => {
     if (email !== "" && account !== "") {
-      var url = `http://localhost:3001/get-balance/${email}/${Date.now()}/${account}`;
+      var url = `${localStorage.getItem(
+        "api-url"
+      )}/get-balance/${email}/${Date.now()}/${account}`;
       axios.get(url).then((res) => {
         let localBalance = res.data.balance
           .toString()
@@ -33,7 +35,7 @@ export default function Transfer() {
     <>
       <Card
         bgcolor="primary"
-        header="Deposit"
+        header="Transfer"
         status={status}
         body={
           <>
