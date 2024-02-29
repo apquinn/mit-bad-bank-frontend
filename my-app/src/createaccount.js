@@ -38,10 +38,10 @@ export default function Auth() {
       document.getElementById("account-name").innerHTML = signupData.email;
       document.getElementById("logout-button").style.display = "inline";
 
-      document.getElementById("li-deposit").style.display = "inline";
-      document.getElementById("li-withdrawl").style.display = "inline";
-      document.getElementById("li-transfer").style.display = "inline";
-      document.getElementById("li-alldata").style.display = "inline";
+      document.getElementById("deposit").style.display = "inline";
+      document.getElementById("withdrawl").style.display = "inline";
+      document.getElementById("transfer").style.display = "inline";
+      document.getElementById("alldata").style.display = "inline";
     }
   };
 
@@ -49,7 +49,7 @@ export default function Auth() {
     <>
       <Card
         bgcolor="primary"
-        header="Create Account"
+        header="Create Login"
         body={
           show ? (
             <>
@@ -105,7 +105,7 @@ export default function Auth() {
                 <br />
                 <br />
                 <span className="white-link">
-                  <a href="/#/login/">Already have an account?</a>
+                  <a href="/#/login/">Already have a login?</a>
                 </span>
               </Form>
             </>

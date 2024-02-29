@@ -7,11 +7,12 @@ import Login from "./login.js";
 import Deposit from "./deposit.js";
 import Withdraw from "./withdraw.js";
 import Transfer from "./transfer.js";
+import Approve from "./approve.js";
 import AllData from "./alldata.js";
 import Profile from "./profile.js";
 import PrivateRoute from "./components/PrivateRoute.js";
 
-localStorage.setItem("api-url", "http://3.137.223.227:3001");
+localStorage.setItem("api-url", "http://localhost:3001");
 export function App() {
   return (
     <HashRouter>
@@ -42,6 +43,14 @@ export function App() {
             element={
               <PrivateRoute>
                 <Transfer />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/approve/"
+            element={
+              <PrivateRoute>
+                <Approve />
               </PrivateRoute>
             }
           />

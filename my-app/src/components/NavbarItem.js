@@ -1,21 +1,14 @@
 import "bootstrap/dist/css/bootstrap.css";
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Nav from "react-bootstrap/Nav";
 
 export default function NavbarItem({ message, link, title }) {
   return (
     <>
-      <OverlayTrigger
-        delay={{ hide: 450, show: 300 }}
-        overlay={(props) => <Tooltip {...props}>{message}</Tooltip>}
-        placement="bottom"
-      >
-        <li id={"li-" + link} className="nav-item">
-          <a id={link} className="nav-link" href={"#/" + link + "/"}>
-            {title}
-          </a>
-        </li>
-      </OverlayTrigger>
+      <Nav.Link id={link} href={"#/" + link + "/"}>
+        {title}
+      </Nav.Link>
     </>
   );
 }

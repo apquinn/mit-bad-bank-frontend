@@ -47,6 +47,8 @@ export default function Deposit() {
               type="Deposit"
               amount={amount}
               setAmount={setAmount}
+              setStatus={setStatus}
+              setBalance={setBalance}
               handleOnclick={() =>
                 handleTransaction(
                   "Deposit",

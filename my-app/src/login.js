@@ -16,10 +16,11 @@ export default function Login() {
     }
     return true;
   }
+  let decoded = "";
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      let decoded = jwtDecode(localStorage.getItem("token"));
+      decoded = jwtDecode(localStorage.getItem("token"));
 
       document.getElementById("loginFields").style.display = "none";
       document.getElementById("loggedin").style.display = "inline";
@@ -34,12 +35,18 @@ export default function Login() {
 
     const response = await handleLogin(email, password);
     if (response) {
+      decoded = jwtDecode(localStorage.getItem("token"));
+
+      if (decoded.userType === "employee") {
+        document.getElementById("approve").style.display = "inline";
+      }
+
       document.getElementById("loginFields").style.display = "none";
       document.getElementById("loggedin").style.display = "inline";
-      document.getElementById("li-deposit").style.display = "inline";
-      document.getElementById("li-withdrawl").style.display = "inline";
-      document.getElementById("li-transfer").style.display = "inline";
-      document.getElementById("li-alldata").style.display = "inline";
+      document.getElementById("deposit").style.display = "inline";
+      document.getElementById("withdrawl").style.display = "inline";
+      document.getElementById("transfer").style.display = "inline";
+      document.getElementById("alldata").style.display = "inline";
       document.getElementById("status").innerHTML = email + " is logged in.";
       document.getElementById("account-name").innerHTML = email;
       document.getElementById("logout-button").style.display = "inline";
@@ -81,7 +88,7 @@ export default function Login() {
               <br />
               <br />
               <span className="white-link">
-                <a href="/#/createaccount/">Need an account? Sign up here!</a>
+                <a href="/#/createaccount/">Need a login? Sign up here!</a>
               </span>{" "}
             </div>
             <div id="loggedin" key="loggedin" style={{ display: "none" }}>

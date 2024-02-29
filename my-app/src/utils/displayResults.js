@@ -20,7 +20,7 @@ export default function displayResults(
             <div key={"card-body6" + index} className="col-md-2">
               {user.type}
             </div>
-            <div key={"card-body8" + index} className="col-md-3">
+            <div key={"card-body8" + index} className="col-md-2">
               {user.email}
             </div>
             <div key={"card-body9" + index} className="col-md-4">
@@ -42,7 +42,7 @@ export default function displayResults(
             <div key={"card-body66" + index} className="col-md-2">
               {user.type}
             </div>
-            <div key={"card-body68" + index} className="col-md-3">
+            <div key={"card-body68" + index} className="col-md-2">
               {user.email}
             </div>
             <div key={"card-body69" + index} className="col-md-4">
@@ -64,7 +64,7 @@ export default function displayResults(
             <div key={"card-body16" + index} className="col-md-2">
               {user.type}
             </div>
-            <div key={"card-body18" + index} className="col-md-3">
+            <div key={"card-body18" + index} className="col-md-2">
               {user.email}
             </div>
           </div>

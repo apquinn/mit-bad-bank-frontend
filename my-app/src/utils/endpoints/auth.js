@@ -1,4 +1,5 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const handleSignup = async (user) => {
   try {
@@ -45,10 +46,10 @@ const handleLogin = async (email, password) => {
 
 const handleLogout = async () => {
   if (localStorage.getItem("token")) {
+    const decoded = jwtDecode(localStorage.getItem("token"));
+
     const response = await axios.get(
-      `${localStorage.getItem("api-url")}/logout/${localStorage.getItem(
-        "email"
-      )}`
+      `${localStorage.getItem("api-url")}/logout/${decoded.email}`
     );
 
     localStorage.removeItem("token");
@@ -58,10 +59,11 @@ const handleLogout = async () => {
       document.getElementById("loggedin").style.display = "none";
     }
 
-    document.getElementById("li-deposit").style.display = "none";
-    document.getElementById("li-withdrawl").style.display = "none";
-    document.getElementById("li-transfer").style.display = "none";
-    document.getElementById("li-alldata").style.display = "none";
+    document.getElementById("deposit").style.display = "none";
+    document.getElementById("withdrawl").style.display = "none";
+    document.getElementById("transfer").style.display = "none";
+    document.getElementById("approve").style.display = "none";
+    document.getElementById("alldata").style.display = "none";
 
     document.getElementById("account-name").innerHTML = "";
     document.getElementById("logout-button").style.display = "none";
