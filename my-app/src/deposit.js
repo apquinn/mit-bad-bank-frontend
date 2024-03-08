@@ -8,6 +8,7 @@ import DisplayAccountSelection from "./components/DisplayAccountSelection.js";
 
 export default function Deposit() {
   const [balance, setBalance] = React.useState("");
+  const [pending, setPending] = React.useState("");
   const [amount, setAmount] = React.useState("");
   const [status, setStatus] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -19,10 +20,8 @@ export default function Deposit() {
         "api-url"
       )}/get-balance/${email}/${Date.now()}/${account}`;
       axios.get(url).then((res) => {
-        let localBalance = res.data.balance
-          .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        setBalance(localBalance);
+        setBalance(res.data.balance);
+        setPending(res.data.pending);
       });
     }
   }, [email, account]);
@@ -44,11 +43,13 @@ export default function Deposit() {
             />
             <DisplayAmountForm
               balance={balance}
+              pending={pending}
               type="Deposit"
               amount={amount}
               setAmount={setAmount}
               setStatus={setStatus}
               setBalance={setBalance}
+              setPending={setPending}
               handleOnclick={() =>
                 handleTransaction(
                   "Deposit",
@@ -57,6 +58,8 @@ export default function Deposit() {
                   setAmount,
                   balance,
                   setBalance,
+                  pending,
+                  setPending,
                   "",
                   "",
                   setStatus

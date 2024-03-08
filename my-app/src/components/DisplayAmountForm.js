@@ -4,6 +4,7 @@ import axios from "axios";
 
 export default function DisplayAmountForm({
   balance,
+  pending,
   type,
   handleOnclick,
   amount,
@@ -11,6 +12,7 @@ export default function DisplayAmountForm({
   select,
   setStatus,
   setBalance,
+  setPending,
 }) {
   useEffect(() => {
     const element = document.getElementById("submit-transaction");
@@ -82,6 +84,7 @@ export default function DisplayAmountForm({
       if (response.status === 200) {
         setAmount(0);
         setBalance(response.data.balance);
+        setPending(response.data.pending);
         setStatus(type + " was successful");
         setTimeout(() => setStatus(""), 3000);
         document.getElementById("uploadCheck").value = "";
@@ -157,19 +160,51 @@ export default function DisplayAmountForm({
     );
   }
 
+  let pendingListing = "";
+  if (pending !== "") {
+    pendingListing = (
+      <>
+        <div
+          style={{
+            display: "inline-block",
+            width: "150px",
+          }}
+        >
+          {" "}
+          Pending
+        </div>
+        <div
+          style={{
+            display: "inline-block",
+            width: "70px",
+            textAlign: "right",
+          }}
+        >
+          {pending}
+        </div>
+        <br />
+      </>
+    );
+  } else {
+    pendingListing = <br />;
+  }
+
   return (
     <>
       <div
         style={{
           display: "inline-block",
           width: "150px",
-          paddingBottom: "20px",
         }}
       >
-        {" "}
         Balance
       </div>
-      <div style={{ display: "inline-block" }}>{balance}</div>
+      <div
+        style={{ display: "inline-block", width: "70px", textAlign: "right" }}
+      >
+        {balance}
+      </div>
+      {pendingListing}
       <br />
       <div id="amountDiv">
         {type} Amount

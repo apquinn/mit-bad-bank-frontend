@@ -31,15 +31,15 @@ export default function handleTransaction(
   setAmount,
   balance,
   setBalance,
+  pending,
+  setPending,
   recipient,
   recipientAccount,
   setStatus
 ) {
   function callFinal(res) {
-    let localBalance = res.data.balance
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    setBalance(localBalance);
+    setBalance(res.data.balance);
+    setPending(res.data.pending);
   }
 
   let amount = document.getElementById("amount").value;
@@ -65,7 +65,7 @@ export default function handleTransaction(
   if (email !== "") {
     if (
       (type === "Withdrawal" || type === "Transfer") &&
-      Number(balance) + Number(amount) < 0
+      Number(balance.replaceAll(",", "")) + Number(amount) < 0
     ) {
       alert(
         "Your balance will not cover the amount you are trying to withdraw. Please try a smaller amount."

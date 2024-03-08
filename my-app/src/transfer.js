@@ -8,6 +8,7 @@ import DisplayAccountSelection from "./components/DisplayAccountSelection.js";
 
 export default function Transfer() {
   const [balance, setBalance] = React.useState("");
+  const [pending, setPending] = React.useState("");
   const [amount, setAmount] = React.useState("");
   const [status, setStatus] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -21,10 +22,8 @@ export default function Transfer() {
         "api-url"
       )}/get-balance/${email}/${Date.now()}/${account}`;
       axios.get(url).then((res) => {
-        let localBalance = res.data.balance
-          .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        setBalance(localBalance);
+        setBalance(res.data.balance);
+        setPending(res.data.pending);
       });
     } else {
       setBalance(0);
@@ -48,9 +47,13 @@ export default function Transfer() {
             />
             <DisplayAmountForm
               balance={balance}
-              type="Transfer"
+              pending={pending}
+              type="Tranfer"
               amount={amount}
               setAmount={setAmount}
+              setStatus={setStatus}
+              setBalance={setBalance}
+              setPending={setPending}
               handleOnclick={() =>
                 handleTransaction(
                   "Transfer",
@@ -59,6 +62,8 @@ export default function Transfer() {
                   setAmount,
                   balance,
                   setBalance,
+                  pending,
+                  setPending,
                   emailRecipient,
                   accountRecipient,
                   setStatus

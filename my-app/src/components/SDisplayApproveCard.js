@@ -16,8 +16,16 @@ export default function DisplayApproveCard({ propsHeader, select }) {
       });
   }, []);
 
-  function handleApprove(e) {
-    var url = `${localStorage.getItem("api-url")}/approve-check/${e.target.id}`;
+  function handleApprove(e, id) {
+    var url = `${localStorage.getItem("api-url")}/approve-check/${id}`;
+    axios.get(url).then((res) => {
+      setUnapproved(res.data);
+    });
+  }
+
+  function handleReject(e, id) {
+    console.log(id);
+    var url = `${localStorage.getItem("api-url")}/reject-check/${id}`;
     axios.get(url).then((res) => {
       setUnapproved(res.data);
     });
@@ -27,9 +35,21 @@ export default function DisplayApproveCard({ propsHeader, select }) {
     return (
       <>
         <div key={"card-body-main-" + index} className="row">
-          <div key={"card-body1-" + index} className="col-md-2">
-            <button onClick={handleApprove} id={item[1]._id} key={item[1]._id}>
+          <div key={"card-body1-" + index} className="col-md-3">
+            <button
+              onClick={(e, id) => handleApprove(e, item[1]._id)}
+              id={"approve-" + item[1]._id}
+              key={"approve-" + item[1]._id}
+            >
               approve
+            </button>{" "}
+            &nbsp;
+            <button
+              onClick={(e, id) => handleReject(e, item[1]._id)}
+              id={"reject-" + item[1]._id}
+              key={"reject-" + item[1]._id}
+            >
+              reject
             </button>
           </div>
           <div key={"card-body2-" + index} className="col-md-2">
@@ -73,13 +93,13 @@ export default function DisplayApproveCard({ propsHeader, select }) {
             className="row"
             style={{ borderBottom: "1px solid black", marginBottom: "10px" }}
           >
-            <div key="card-body1" className="col-md-2">
+            <div key="card-body1" className="col-md-3">
               Action
             </div>
             <div key="card-body2" className="col-md-2">
               Amount
             </div>
-            <div key="card-body3" className="col-md-8">
+            <div key="card-body3" className="col-md-7">
               Check image
             </div>
           </div>

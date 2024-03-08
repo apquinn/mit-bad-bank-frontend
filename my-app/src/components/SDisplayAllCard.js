@@ -19,9 +19,14 @@ export default function DisplayAllCard({ propsHeader, select }) {
       var url = `${localStorage.getItem(
         "api-url"
       )}/get-all-transactions/${email}/${account}/${Date.now()}`;
-      axios.get(url).then((res) => {
-        setResults(res.data);
-      });
+      axios
+        .get(url)
+        .then((res) => {
+          setResults(res.data);
+        })
+        .catch((error) => {
+          console.log("HERE INSIDE", error);
+        });
     } else {
       setResults("");
     }
@@ -40,7 +45,7 @@ export default function DisplayAllCard({ propsHeader, select }) {
     header = [<div key={"card-body80"} className="col-md-1"></div>];
   }
 
-  transactions = displayResults(results, transactions, decoded, handleDelete);
+  transactions = displayResults(results, decoded, handleDelete);
 
   return (
     <div className="card mb-12 bg-primary text-white">
